@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boekhouding · demo</title>
+<style>
+:root{--top:#1f2d3d;--top2:#2b3d52;--acc:#d6402f;--blue:#0a63b8;--line:#dde3ea;--head:#f2f5f8;--txt:#1d2733;--soft:#5b6878}
+*{box-sizing:border-box}
+body{margin:0;background:#eef1f5;color:var(--txt);font:13px/1.45 "Segoe UI",Arial,Helvetica,sans-serif}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+header{background:var(--top);color:#fff;display:flex;align-items:center;gap:16px;padding:0 16px;height:48px}
+.app{font-weight:700;font-size:15px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.app i{width:22px;height:22px;border-radius:4px;background:var(--acc);display:inline-grid;place-items:center;font-style:normal;font-size:12px}
+.adm{background:var(--top2);border:1px solid #3e536b;color:#fff;border-radius:3px;padding:6px 8px;font:13px "Segoe UI",Arial,sans-serif;min-width:280px}
+.search{margin-left:auto;background:#fff;border:0;border-radius:3px;padding:6px 10px;width:220px;font:13px "Segoe UI",Arial}
+.user{width:30px;height:30px;border-radius:50%;background:#4b6584;display:grid;place-items:center;font-weight:600}
+.menu{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:2px;padding:0 12px;overflow-x:auto}
+.menu a{color:var(--txt);padding:11px 14px;border-bottom:3px solid transparent;white-space:nowrap}
+.menu a:hover{text-decoration:none;background:#f6f8fa}.menu a.on{border-bottom-color:var(--acc);font-weight:600}
+.wrap{padding:16px 20px 90px}
+.crumb{color:var(--soft);font-size:12px;margin-bottom:4px}
+h1{font-size:20px;font-weight:600;margin:0 0 12px}
+.tools{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.b{border:1px solid #b8c2cc;background:#fff;color:var(--txt);padding:5px 12px;border-radius:2px;font:13px "Segoe UI",Arial;cursor:pointer}
+.b:hover{background:#f3f6f9}.b.p{background:var(--blue);border-color:var(--blue);color:#fff}.b.p:hover{background:#0857a2}.b.s{padding:2px 8px;font-size:12px}
+.panel{background:#fff;border:1px solid var(--line);margin-bottom:14px}
+.panel>h3{margin:0;font-size:13px;font-weight:600;padding:8px 12px;border-bottom:1px solid var(--line);background:#fafbfc;display:flex;justify-content:space-between}
+table.g{width:100%;border-collapse:collapse}
+.g th{background:var(--head);text-align:left;font-weight:600;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:12px;color:#334155}
+.g td{padding:6px 10px;border-bottom:1px solid #edf1f5;vertical-align:top}
+.g tr:hover td{background:#f7fafd}.g .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.g tfoot td{font-weight:600;background:#fafbfc}
+.form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 24px;padding:12px}
+.form label{display:block;color:var(--soft);font-size:12px}.form div>div{border-bottom:1px solid var(--line);padding:3px 0;min-height:24px}
+.tabs{display:flex;border-bottom:1px solid var(--line);background:#fafbfc}.tabs a{padding:8px 14px;color:var(--txt);border-bottom:2px solid transparent}.tabs a.on{border-bottom-color:var(--blue);font-weight:600}
+.pill{display:inline-block;padding:1px 7px;border-radius:2px;font-size:11.5px;font-weight:600}
+.ok{background:#e3f4e8;color:#1e6b38}.warn{background:#fdf0d5;color:#8a5a00}.bad{background:#fde4e1;color:#a3271a}.neu{background:#eef1f5;color:#475569}.inf{background:#e1effc;color:#0a4f8f}
+.missing td{background:#fff3f1!important;color:#a3271a}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.tile{background:#fff;border:1px solid var(--line);padding:12px 14px}.tile .l{color:var(--soft);font-size:12px}.tile .v{font-size:22px;font-weight:600;margin-top:2px}
+.msg{padding:8px 12px;border:1px solid;margin-bottom:12px;font-size:13px}.msg.w{background:#fff8e6;border-color:#f0d58c}.msg.e{background:#fff3f1;border-color:#f3b8ae;color:#8a2215}.msg.i{background:#eef6fd;border-color:#b6d6f2}
+.two{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
+.bar{display:flex;height:22px;border-radius:2px;overflow:hidden;margin:10px 12px}.bar span{display:block;height:100%}
+.leg{display:flex;flex-wrap:wrap;gap:6px 14px;padding:0 12px 12px;font-size:12px;color:var(--soft)}.leg i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+@media(max-width:900px){.tiles,.form,.two{grid-template-columns:1fr}.adm{min-width:0}.search{display:none}}
+</style>
+</head>
+<body data-site="boek">
+<header><span class="app"><i>B</i>Boekhouding</span>
+<select class="adm" id="adm"></select>
+<input class="search" placeholder="Zoeken (project, KKN, relatie)…"><span class="user">JV</span></header>
+<nav class="menu" id="menu"></nav>
+<div class="wrap" id="main"></div>
+<script src="../shared/store.js"></script>
+<script>
+const {eur}=KKN,eur2=KKN.eur2;const $=s=>document.querySelector(s);
+const ADMS=[0,2,4,5,6,9,10,11,12];
+let adm=Number(sessionStorage.getItem('demo-adm')??6);
+const isFab=()=>adm===0;
+const KIND={backflush:['Voorraad · backflush','neu'],perorder:['Voorraad · per order','inf'],inkoop:['Inkoop op order','warn']};
+const COLORS=['#1c4e5c','#2a768c','#3391ab','#9aa6ab','#c3cbce'];
+function menu(page){const items=isFab()?[['','Dashboard'],['fabrieksorders','Fabrieksorders'],['inkoop','Inkoop'],['voorraad','Voorraad'],['kostprijs','Nacalculatie per KKN'],['koppelingen','Koppelingen']]:[['','Dashboard'],['projecten','Projecten'],['debiteuren','Verkoop · openstaande posten'],['kostprijs','Nacalculatie per KKN'],['koppelingen','Koppelingen']];
+ return items.map(([k,l])=>`<a href="#/${k}" class="${page===k?'on':''}">${l}</a>`).join('')}
+const myOrders=()=>KKN.state.orders.filter(o=>isFab()?o.kkn:o.adm===adm);
+const projStatus=o=>o.status==='offerte'?['Offerte','neu']:o.step>=10?['Afgesloten','ok']:['Opdracht','inf'];
+
+function dashboard(){const s=KKN.state;
+ if(isFab()){const fo=s.orders.filter(o=>o.exact.fabOrder);const diff=s.stock.filter(x=>x.adm!==x.real).length;const val=s.stock.reduce((a,x)=>a+x.adm*x.price,0);
+  return `<div class="crumb">KK Nederland B.V. · fabriek</div><h1>Dashboard</h1>
+  ${s.koppeling?'':'<div class="msg e"><b>Koppeling uit.</b> Fabrieksorders komen onvolledig binnen, inkoop staat niet op een order en de voorraad wordt niet afgeboekt.</div>'}
+  <div class="tiles"><div class="tile"><div class="l">Fabrieksorders in productie</div><div class="v">${s.orders.filter(o=>o.factory==='in_productie').length}</div></div>
+  <div class="tile"><div class="l">Open inkooporders met KKN</div><div class="v">${s.orders.flatMap(o=>o.exact.inkoop).filter(i=>i.status==='besteld').length}</div></div>
+  <div class="tile"><div class="l">Voorraadwaarde (administratief)</div><div class="v">${eur(val)}</div></div>
+  <div class="tile"><div class="l">Artikelen met telverschil</div><div class="v" style="color:${diff?'#a3271a':'#1e6b38'}">${diff}</div></div></div>
+  <div class="panel"><h3>Laatste fabrieksorders</h3>${foTable(fo.slice(0,6))}</div>`}
+ const os=myOrders(),acc=os.filter(o=>o.status==='geaccepteerd');const open=os.flatMap(o=>o.invoices.filter(i=>i.status==='gefactureerd').map(i=>KKN.incl(o)*i.pct)).reduce((a,b)=>a+b,0);
+ return `<div class="crumb">${adm} · ${KKN.ADM[adm]}</div><h1>Dashboard</h1>
+ <div class="tiles"><div class="tile"><div class="l">Projecten in uitvoering</div><div class="v">${acc.filter(o=>o.step<10).length}</div></div><div class="tile"><div class="l">Offertes</div><div class="v">${os.filter(o=>o.status==='offerte').length}</div></div>
+ <div class="tile"><div class="l">Openstaande debiteuren</div><div class="v">${eur(open)}</div></div><div class="tile"><div class="l">Kosten op projecten (via KKN)</div><div class="v">${eur(os.reduce((a,o)=>a+(KKN.state.koppeling?KKN.orderCost(o):0),0))}</div></div></div>
+ <div class="panel"><h3>Projecten</h3>${projTable(os)}</div>`}
+
+function projTable(os){if(!os.length)return '<div style="padding:12px" class="crumb">Geen projecten in deze administratie in de demo. Kies 6 Arnhem, 5 Nijmegen, 2 Eindhoven of 9 Amersfoort.</div>';
+ return `<table class="g"><thead><tr><th>Project</th><th>Omschrijving</th><th>KKN</th><th>Status</th><th class="n">Aanneemsom</th><th class="n">Gefactureerd</th><th class="n">Kosten</th><th class="n">OHW</th></tr></thead><tbody>${os.map(o=>{const st=projStatus(o);const f=o.invoices.filter(i=>['gefactureerd','betaald'].includes(i.status)).reduce((a,i)=>a+i.pct*o.excl,0);const k=o.exact.montageBooked?o.montage:0;const c=KKN.state.koppeling||o.exact.montageBooked?KKN.orderCost(o):0;
+ return `<tr><td><a href="#/project/${o.id}">${o.id}</a></td><td>${o.klant}, ${o.plaats}</td><td>${o.kkn&&(KKN.state.koppeling||!o.factoryHidden)?o.kkn:'<span class="crumb">—</span>'}</td><td><span class="pill ${st[1]}">${st[0]}</span></td><td class="n">${eur2(o.excl)}</td><td class="n">${eur2(f)}</td><td class="n">${eur2(c)}</td><td class="n">${eur2(Math.max(0,c-f))}</td></tr>`}).join('')}</tbody></table>`}
+
+function foTable(fo){if(!fo.length)return '<div style="padding:12px" class="crumb">Nog geen fabrieksorders. Geef in de calculatie-app een order vrij voor productie.</div>';
+ return `<table class="g"><thead><tr><th>KKN</th><th>Offerte</th><th>Klant</th><th>Vestiging</th><th>Regels</th><th>Status</th><th class="n">Materiaal</th><th class="n">Uren</th></tr></thead><tbody>${fo.map(o=>{const n=o.exact.fabOrder.length,t=o.lines.length;
+ return `<tr><td><a href="#/fo/${o.id}">${o.kkn}</a></td><td>${o.id}</td><td>${o.klant}</td><td>${o.adm} ${o.vest}</td><td>${n===t?n+' / '+t:'<span class="pill bad">'+n+' / '+t+'</span>'}</td><td><span class="pill ${o.factory==='in_productie'?'warn':'ok'}">${o.factory==='in_productie'?'In productie':'Gereed gemeld'}</span></td><td class="n">${eur2(o.exact.fabOrder.reduce((a,l)=>a+l.cost,0))}</td><td class="n">${o.exact.hoursBooked?o.hours+' u':'—'}</td></tr>`}).join('')}</tbody></table>`}
+
+function fabOrder(id){const o=KKN.find(id);if(!o||!o.exact.fabOrder)return '<h1>Niet gevonden</h1>';const miss=o.lines.filter(l=>!o.exact.fabOrder.find(x=>x.art===l.art));
+ return `<div class="crumb"><a href="#/fabrieksorders">Fabrieksorders</a> › KKN ${o.kkn}</div><h1>Fabrieksorder ${o.kkn}</h1>
+ ${miss.length?`<div class="msg e"><b>${miss.length} regel(s) uit de calculatie ontbreken:</b> ${miss.map(l=>l.omschr).join(', ')}. Deze kosten vallen buiten de kostprijs van de order.</div>`:'<div class="msg i">Alle regels uit de calculatie zijn overgekomen, met het KKN-nummer op elke regel.</div>'}
+ <div class="panel"><div class="form"><div><label>KKN-nummer</label><div>${o.kkn}</div></div><div><label>Offertenummer</label><div>${o.id}</div></div><div><label>Vestiging (project)</label><div>${o.adm} ${o.vest}</div></div><div><label>Status</label><div>${o.factory==='in_productie'?'In productie':'Gereed gemeld'}</div></div></div></div>
+ <div class="panel"><h3>Stuklijst en kosten</h3><table class="g"><thead><tr><th>Artikel</th><th>Omschrijving</th><th class="n">Aantal</th><th>Herkomst</th><th>Afgeboekt</th><th class="n">Kosten</th></tr></thead><tbody>
+ ${o.lines.map(l=>{const there=o.exact.fabOrder.find(x=>x.art===l.art);const k=KIND[l.kind];const ink=o.exact.inkoop.find(i=>i.art===l.art);
+  const af=!there?'—':l.kind==='backflush'?(o.exact.backflushed?'<span class="pill ok">bij gereedmelding</span>':o.factory==='in_productie'?'<span class="pill neu">wacht op gereed</span>':'<span class="pill bad">niet afgeboekt</span>'):l.kind==='perorder'?(o.exact.picked?'<span class="pill ok">bij uitgifte</span>':'<span class="pill bad">niet afgeboekt</span>'):(ink?'<span class="pill '+(ink.status==='ontvangen'?'ok':'warn')+'">'+ink.status+'</span>':'<span class="pill bad">geen inkooporder</span>');
+  return `<tr class="${there?'':'missing'}"><td>${l.art}</td><td>${l.omschr}${there?'':' · <b>niet overgekomen</b>'}</td><td class="n">${l.qty} ${l.unit}</td><td><span class="pill ${k[1]}">${k[0]}</span></td><td>${af}</td><td class="n">${there?eur2(l.cost):'—'}</td></tr>`}).join('')}
+ <tr><td>UREN</td><td>Fabrieksuren (${o.rate} €/u)</td><td class="n">${o.hours} u</td><td><span class="pill neu">Urenregistratie</span></td><td>${o.exact.hoursBooked?'<span class="pill ok">geboekt</span>':'—'}</td><td class="n">${o.exact.hoursBooked?eur2(o.hours*o.rate):'—'}</td></tr></tbody>
+ <tfoot><tr><td colspan="5">Kosten fabriek op KKN ${o.kkn}</td><td class="n">${eur2(KKN.factoryCost(o))}</td></tr></tfoot></table></div>`}
+
+function project(id){const o=KKN.find(id);if(!o)return '<h1>Niet gevonden</h1>';const st=projStatus(o),incl=KKN.incl(o);
+ return `<div class="crumb"><a href="#/projecten">Projecten</a> › ${o.id}</div><h1>Project ${o.id} · ${o.klant}</h1>
+ <div class="tools">${o.status==='offerte'?'':`<a class="b" href="#/kostprijs/${o.id}">Nacalculatie per KKN</a>`}<a class="b" href="#/debiteuren">Openstaande posten</a></div>
+ <div class="panel"><div class="form"><div><label>Projectcode</label><div>${o.id}</div></div><div><label>KKN-nummer</label><div>${o.kkn&&(KKN.state.koppeling||!o.factoryHidden)?o.kkn:'—'}</div></div><div><label>Klant</label><div>${o.klant}</div></div><div><label>Status</label><div><span class="pill ${st[1]}">${st[0]}</span></div></div>
+ <div><label>Adres</label><div>${o.adres}, ${o.pc} ${o.plaats}</div></div><div><label>Projecttype</label><div>Vaste prijs</div></div><div><label>Aanneemsom excl. btw</label><div>${eur2(o.excl)}</div></div><div><label>Projectleider</label><div>${o.adviseur}</div></div></div></div>
+ <div class="panel"><h3>Termijnen</h3><table class="g"><thead><tr><th>Termijn</th><th>Factuur</th><th>Moment</th><th class="n">Bedrag incl. btw</th><th>Status</th><th></th></tr></thead><tbody>${o.invoices.map(i=>invRow(o,i,incl)).join('')}</tbody></table></div>`}
+function invRow(o,i,incl){const st={wacht:['Gepland','neu'],gefactureerd:['Open','warn'],betaald:['Betaald','ok'],handwerk:['Nog maken','bad']}[i.status];
+ return `<tr><td>${i.label}</td><td>${i.nr||'—'}</td><td>${i.when}</td><td class="n">${eur2(incl*i.pct)}</td><td><span class="pill ${st[1]}">${st[0]}</span>${i.paid?' <span class="crumb">'+i.paid.split('-').reverse().join('-')+'</span>':''}</td><td>${i.status==='gefactureerd'?`<button class="b s p" onclick="KKN.A.betaal('${o.id}','${i.key}')">Betaling verwerken</button>`:i.status==='handwerk'?`<button class="b s" onclick="KKN.A.handfactuur('${o.id}','${i.key}')">Factuur maken</button>`:''}</td></tr>`}
+
+function debiteuren(){const os=myOrders();const rows=os.flatMap(o=>o.invoices.filter(i=>i.status!=='wacht').map(i=>({o,i})));
+ return `<div class="crumb">${adm} · ${KKN.ADM[adm]}</div><h1>Openstaande posten debiteuren</h1>
+ <div class="msg i">Verwerk hier een betaling. ${KKN.state.koppeling?'Het CRM laat direct bij de order zien dat de klant betaald heeft.':'Zonder koppeling ziet het CRM dit niet.'}</div>
+ <div class="panel"><table class="g"><thead><tr><th>Project</th><th>Klant</th><th>Termijn</th><th>Factuur</th><th>Moment</th><th class="n">Bedrag</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(({o,i})=>invRow(o,i,KKN.incl(o)).replace('<tr>',`<tr><td><a href="#/project/${o.id}">${o.id}</a></td><td>${o.klant}</td>`)).join('')||'<tr><td colspan="8" class="crumb">Geen facturen in deze administratie.</td></tr>'}</tbody></table></div>`}
+
+function inkoop(){const s=KKN.state;const rows=s.orders.flatMap(o=>o.exact.inkoop.map(i=>({o,i})));const lost=s.orders.filter(o=>o.kkn&&!o.exact.inkoop.length&&o.lines.some(l=>l.kind==='inkoop'));
+ return `<div class="crumb">KK Nederland B.V. · fabriek</div><h1>Inkooporders</h1>
+ ${lost.length?`<div class="msg e"><b>${lost.length} order(s) zonder inkoop in de boekhouding:</b> ${lost.map(o=>'KKN '+o.kkn).join(', ')}. Glas, horren en roosters zijn buiten het systeem besteld; de kosten komen later binnen zonder ordernummer.</div>`:''}
+ <div class="panel"><table class="g"><thead><tr><th>Inkooporder</th><th>Leverancier</th><th>Omschrijving</th><th>KKN</th><th class="n">Aantal</th><th class="n">Bedrag</th><th>Status</th></tr></thead><tbody>${rows.map(({o,i},n)=>`<tr><td>IO-${26400+n}</td><td>${i.supplier}</td><td>${i.omschr}</td><td><a href="#/fo/${o.id}">${i.kkn}</a></td><td class="n">${i.qty} ${i.unit}</td><td class="n">${eur2(i.cost)}</td><td><span class="pill ${i.status==='ontvangen'?'ok':'warn'}">${i.status}</span></td></tr>`).join('')||'<tr><td colspan="7" class="crumb">Geen inkooporders.</td></tr>'}</tbody></table></div>`}
+
+function voorraad(){const s=KKN.state;const diff=s.stock.filter(x=>x.adm!==x.real);
+ return `<div class="crumb">KK Nederland B.V. · magazijn fabriek</div><h1>Voorraad</h1>
+ <div class="tools"><button class="b" onclick="KKN.A.tel()">Weektelling invoeren</button>${diff.length?'<button class="b p" onclick="KKN.A.corrigeer()">Verschillen boeken</button>':''}</div>
+ ${diff.length?`<div class="msg e"><b>De administratie wijkt af van het magazijn bij ${diff.length} artikel(en).</b> Er is materiaal gebruikt zonder dat het is afgeboekt. Zo ontstaat een tekort dat pas bij de telling blijkt.</div>`:'<div class="msg i">Administratie en magazijn zijn gelijk. Standaardmateriaal wordt afgeboekt bij de gereedmelding (backflush), duur materiaal bij de uitgifte op het KKN.</div>'}
+ <div class="panel"><table class="g"><thead><tr><th>Artikel</th><th>Omschrijving</th><th>Afboeken</th><th class="n">Administratief</th><th class="n">Magazijn (telling)</th><th class="n">Verschil</th><th class="n">Minimum</th><th class="n">Waarde</th></tr></thead><tbody>${s.stock.map(x=>{const d=x.real-x.adm;const kind=x.art==='PRF-A'?KIND.perorder:KIND.backflush;
+  return `<tr><td>${x.art}</td><td>${x.omschr}</td><td><span class="pill ${kind[1]}">${kind[0].replace('Voorraad · ','')}</span></td><td class="n">${x.adm.toLocaleString('nl-NL')} ${x.unit}</td><td class="n">${x.real.toLocaleString('nl-NL')} ${x.unit}</td><td class="n" style="color:${d?'#a3271a':'inherit'};font-weight:${d?600:400}">${d?d.toLocaleString('nl-NL'):'0'}</td><td class="n">${x.min} ${x.unit}${x.real<x.min?' <span class="pill bad">bestellen</span>':''}</td><td class="n">${eur2(x.adm*x.price)}</td></tr>`}).join('')}</tbody></table></div>`}
+
+function kostprijs(id){const s=KKN.state;const os=s.orders.filter(o=>o.kkn&&(isFab()||o.adm===adm));const o=id?KKN.find(id):os.find(x=>x.main)||os[0];
+ const list=`<div class="panel"><h3>Orders met KKN</h3><table class="g"><thead><tr><th>KKN</th><th>Project</th><th>Vestiging</th><th class="n">Verkoop</th><th class="n">Kosten</th><th class="n">Marge</th></tr></thead><tbody>${os.map(x=>{const c=KKN.orderCost(x);return `<tr><td><a href="#/kostprijs/${x.id}">${x.kkn}</a></td><td>${x.id}</td><td>${x.adm} ${x.vest}</td><td class="n">${eur2(x.excl)}</td><td class="n">${eur2(c)}</td><td class="n">${x.step>=9?Math.round((x.excl-c)/x.excl*100)+'%':'<span class="pill neu">loopt nog</span>'}</td></tr>`}).join('')||'<tr><td colspan="6" class="crumb">Nog geen orders met KKN.</td></tr>'}</tbody></table></div>`;
+ if(!o||!o.kkn)return `<h1>Nacalculatie per KKN</h1>${list}`;
+ const segs=[['Inkoop op order',(o.exact.fabOrder||[]).filter(l=>l.kind==='inkoop').reduce((a,l)=>a+l.cost,0)],['Materiaal uit voorraad',(o.exact.fabOrder||[]).filter(l=>l.kind!=='inkoop').reduce((a,l)=>a+l.cost,0)],['Fabrieksuren',o.exact.hoursBooked?o.hours*o.rate:0],['Montage en restwerk',(o.exact.montageBooked?o.montage:0)+(o.exact.restBooked?o.restwerk:0)]];
+ const cost=segs.reduce((a,x)=>a+x[1],0),calc=KKN.calcCost(o)+o.restwerk;
+ const rows=[['KK Nederland B.V.','Inkoop op order (glas, horren, roosters)',segs[0][1],o.lines.filter(l=>l.kind==='inkoop').reduce((a,l)=>a+l.cost,0)],['KK Nederland B.V.','Materiaal uit voorraad',segs[1][1],o.lines.filter(l=>l.kind!=='inkoop').reduce((a,l)=>a+l.cost,0)],['KK Nederland B.V.','Fabrieksuren',segs[2][1],o.hours*o.rate],[o.adm+' '+o.vest,'Montage',o.exact.montageBooked?o.montage:0,o.montage],[o.adm+' '+o.vest,'Restwerk',o.exact.restBooked?o.restwerk:0,o.restwerk]];
+ return `<div class="crumb">Nacalculatie per KKN · telt beide administraties op</div><h1>KKN ${o.kkn} · ${o.klant}</h1>
+ ${s.koppeling?'':'<div class="msg w">Koppeling uit: alleen wat met het KKN-nummer is geboekt telt mee. Ontbrekende regels en inkoop zonder nummer vallen erbuiten.</div>'}
+ <div class="two"><div class="panel"><h3>Kosten per bron</h3><table class="g"><thead><tr><th>Administratie</th><th>Kostensoort</th><th class="n">Voorcalculatie</th><th class="n">Werkelijk</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="n">${eur2(r[3])}</td><td class="n">${eur2(r[2])}</td></tr>`).join('')}</tbody>
+ <tfoot><tr><td colspan="2">Kostprijs van de order</td><td class="n">${eur2(calc)}</td><td class="n">${eur2(cost)}</td></tr><tr><td colspan="2">Verkoopprijs excl. btw</td><td></td><td class="n">${eur2(o.excl)}</td></tr><tr><td colspan="2">Marge van de order</td><td class="n">${Math.round((o.excl-calc)/o.excl*100)}%</td><td class="n">${eur2(o.excl-cost)} (${Math.round((o.excl-cost)/o.excl*100)}%)</td></tr></tfoot></table></div>
+ <div class="panel"><h3>Opbouw verkoopprijs</h3><div class="bar">${segs.map((x,i)=>`<span style="width:${x[1]/o.excl*100}%;background:${COLORS[i]}"></span>`).join('')}<span style="width:${Math.max(0,(o.excl-cost)/o.excl*100)}%;background:#e4a11b"></span></div>
+ <div class="leg">${segs.map((x,i)=>`<span><i style="background:${COLORS[i]}"></i>${x[0]} ${eur(x[1])}</span>`).join('')}<span><i style="background:#e4a11b"></i>Marge ${eur(o.excl-cost)}</span></div>
+ <div style="padding:0 12px 12px" class="crumb">Geen interne factuur: de fabriekskosten hangen via het KKN direct aan de order. Het vaste fabriekspercentage valt buiten deze marge.</div></div></div>${list}`}
+
+function koppelingen(){const s=KKN.state;
+ return `<h1>Koppelingen</h1><div class="panel"><h3>App-registraties</h3><table class="g"><thead><tr><th>Koppeling</th><th>Richting</th><th>Administraties</th><th>Status</th></tr></thead><tbody>
+ <tr><td>Calculatie-app → Boekhouding</td><td>fabrieksorders, stuklijst, inkoop, gereedmeldingen</td><td>KK Nederland + 8 vestigingen</td><td><span class="pill ${s.koppeling?'ok':'bad'}">${s.koppeling?'actief':'oud script (onvolledig)'}</span></td></tr>
+ <tr><td>CRM-KKN ↔ Boekhouding</td><td>projectstatus, termijnen, betalingen, kosten per KKN</td><td>8 vestigingen</td><td><span class="pill ${s.koppeling?'ok':'neu'}">${s.koppeling?'actief':'niet gekoppeld'}</span></td></tr></tbody></table></div>
+ <div class="panel"><h3>Synchronisatielog</h3><table class="g"><thead><tr><th>Tijd</th><th>Van</th><th>Naar</th><th>Bericht</th></tr></thead><tbody>${s.log.map(l=>`<tr class="${l.ok?'':'missing'}"><td>${l.t}</td><td>${l.from}</td><td>${l.to||'—'}</td><td>${l.msg}</td></tr>`).join('')}</tbody></table></div>`}
+
+function render(){const h=location.hash.replace(/^#\/?/,'');const [page,id]=h.split('/');
+ $('#adm').innerHTML=ADMS.map(a=>`<option value="${a}" ${a===adm?'selected':''}>${a===0?'KK Nederland B.V. (fabriek)':a+' · Kroon Kozijn '+KKN.ADM[a]}</option>`).join('');
+ const p=page||'';$('#menu').innerHTML=menu(p==='fo'?'fabrieksorders':p==='project'?'projecten':p);
+ $('#main').innerHTML=p==='fo'?fabOrder(decodeURIComponent(id)):p==='fabrieksorders'?`<div class="crumb">KK Nederland B.V. · fabriek</div><h1>Fabrieksorders</h1><div class="panel">${foTable(KKN.state.orders.filter(o=>o.exact.fabOrder))}</div>`:p==='project'?project(decodeURIComponent(id)):p==='projecten'?`<div class="crumb">${adm} · ${KKN.ADM[adm]}</div><h1>Projecten</h1><div class="panel">${projTable(myOrders())}</div>`:p==='debiteuren'?debiteuren():p==='inkoop'?inkoop():p==='voorraad'?voorraad():p==='kostprijs'?kostprijs(id&&decodeURIComponent(id)):p==='koppelingen'?koppelingen():dashboard()}
+$('#adm').onchange=e=>{adm=Number(e.target.value);sessionStorage.setItem('demo-adm',adm);location.hash='#/';render()};
+window.addEventListener('hashchange',()=>{render();scrollTo(0,0)});KKN.on(render);render();
+</script>
+<script src="../shared/bar.js"></script>
+</body>
+</html>

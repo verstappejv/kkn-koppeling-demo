@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRM-KKN · demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#3391ab;--brand-dark:#2a768c;--brand-deep:#1c4e5c;--brand-light:#f5f9fb;--ink:#202020;--s50:#f8fafc;--s100:#f1f5f9;--s200:#e2e8f0;--s300:#cbd5e1;--s400:#94a3b8;--s500:#64748b;--s600:#475569;--s700:#334155;--s900:#0f172a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--s50);color:var(--ink);font:14px/1.5 Poppins,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.app{min-height:100vh;display:flex}
+aside{width:240px;flex-shrink:0;height:100vh;position:sticky;top:0;background:var(--ink);color:#cbd5e1;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:8px;padding:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.brand svg{height:24px;color:#fff}
+.brand b{display:block;color:#fff;font-size:15px;font-weight:600;line-height:1.2}.brand small{font-size:11px;color:var(--s400)}
+nav{flex:1;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:2px}
+nav a{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:6px;white-space:nowrap}
+nav a:hover{background:rgba(255,255,255,.05);color:#fff}nav a.on{background:var(--brand);color:#fff}
+nav .c{border-radius:999px;padding:0 6px;font-size:11px;font-weight:600;background:rgba(255,255,255,.1);color:#e2e8f0}nav .c.warn{background:#e11d48;color:#fff}
+.me{border-top:1px solid rgba(255,255,255,.1);padding:12px;font-size:12px}.me b{color:#fff;font-weight:500;display:block}.me span{color:var(--s400)}
+main{flex:1;min-width:0;padding:32px;padding-bottom:90px}
+.ph{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:20px}
+.ph h1{font-size:20px;font-weight:600;margin:0;color:var(--s900)}.ph .sub{font-size:14px;color:var(--s500);margin-top:2px}
+.card{background:#fff;border:1px solid var(--s200);border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card-h{padding:12px 16px;border-bottom:1px solid var(--s100);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-t{font-weight:600;font-size:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:8px;border:1px solid var(--s300);background:#fff;padding:8px 12px;font:500 14px Poppins,sans-serif;color:var(--s700);cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--s50)}.btn-primary{border-color:var(--brand);background:var(--brand);color:#fff}.btn-primary:hover{background:var(--brand-dark)}
+.btn-ok{border-color:#059669;background:#059669;color:#fff}.btn-ok:hover{background:#047857}.btn-sm{padding:4px 8px;font-size:12px;border-radius:6px}
+.input{display:block;width:100%;border-radius:8px;border:1px solid var(--s300);background:#fff;padding:8px 12px;font:14px Poppins,sans-serif}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:500;white-space:nowrap}
+.b-sl{background:var(--s100);color:var(--s700)}.b-am{background:#fef3c7;color:#92400e}.b-em{background:#d1fae5;color:#065f46}.b-sk{background:#e0f2fe;color:#075985}.b-ro{background:#ffe4e6;color:#be123c}.b-or{background:#ffedd5;color:#9a3412}.b-vi{background:#ede9fe;color:#5b21b6}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-weight:500;color:var(--s500);font-size:12px;text-transform:uppercase;letter-spacing:.03em;padding:8px 12px;border-bottom:1px solid var(--s200);background:var(--s50);white-space:nowrap}
+.tbl td{padding:8px 12px;border-bottom:1px solid var(--s100);vertical-align:top}.tbl tr:hover td{background:rgba(248,250,252,.6)}
+.num{text-align:right;font-variant-numeric:tabular-nums}.link{color:var(--brand)}.link:hover{text-decoration:underline}
+.muted{color:var(--s500)}.xs{font-size:12px}.red{color:#be123c}.grn{color:#047857}.amb{color:#b45309}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.stat{padding:16px}.stat .l{font-size:12px;font-weight:500;color:var(--s500)}.stat .v{font-size:24px;font-weight:600;margin-top:4px;font-variant-numeric:tabular-nums}
+.filters{padding:12px;margin-bottom:16px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}
+.back{font-size:13px;color:var(--s500);display:inline-block;margin-bottom:8px}.back:hover{color:var(--brand)}
+.h1row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.h1row h1{font-size:20px;font-weight:600;margin:0 6px 0 0}
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:16px;margin:16px 0}
+.lab{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--s500);margin-bottom:4px}.big2{font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start}
+.col{display:flex;flex-direction:column;gap:16px}
+.flow{list-style:none;margin:0;padding:4px 0}
+.flow li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;padding:10px 16px;border-bottom:1px solid var(--s100)}
+.flow li:last-child{border-bottom:0}
+.dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--s100);color:var(--s500)}
+.flow li.done .dot{background:#059669;color:#fff}.flow li.act{background:var(--brand-light)}.flow li.act .dot{background:var(--brand);color:#fff}
+.flow .meta{font-size:12px;color:var(--s500)}
+.auto{color:var(--brand-dark);font-weight:500}.hand{color:#b45309;font-weight:500}
+.rows>div{display:flex;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid var(--s100);font-size:14px}.rows>div:last-child{border-bottom:0}
+.rows .tot{background:var(--s50);font-size:12px}
+.note{padding:10px 16px;font-size:12px}
+.warnbox{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
+.okbox{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
+.empty{padding:40px;text-align:center;color:var(--s500)}
+.tri{font-size:12px;display:inline-grid;grid-template-columns:auto auto;gap:2px 8px}
+@media (max-width:1000px){aside{display:none}.grid,.strip,.stats{grid-template-columns:1fr}main{padding:16px}}
+</style>
+</head>
+<body data-site="crm">
+<div class="app">
+<aside>
+  <div class="brand"><svg viewBox="0 0 70 33" fill="currentColor"><path d="M29.7853854,0.25841851 L33.9434434,5.27028245 C34.0351652,5.38125458 34.0861218,5.52166831 34.0861218,5.6666115 L34.0861218,32.0270229 C34.0861218,32.3610716 33.8154857,32.6305754 33.4825693,32.6305754 L27.5353688,32.6305754 C27.3643811,32.6305754 27.2035848,32.5569714 27.0892155,32.4301461 L16.6997326,20.0488266 C16.4347583,19.7328957 15.9863403,19.6060704 15.6126586,19.7804552 C15.0464742,20.0431647 14.9196489,20.7463657 15.2910659,21.1891219 L19.4445943,26.1387055 C19.6314352,26.3617822 19.6325675,26.6879044 19.4457267,26.9132457 L14.8777513,32.4131606 C14.763382,32.5513096 14.5923944,32.6305754 14.4134801,32.6305754 L0.605375983,32.6305754 C0.0924129542,32.6305754 -0.187282119,32.0326847 0.142237178,31.6386204 L13.0625642,16.2168908 C13.2482727,15.9949466 13.2505374,15.6710891 13.0682261,15.4468801 L1.31310643,1.00691423 C0.992646084,0.613982287 1.26894405,0.0262829234 1.77511287,0.0206091106 L15.1800937,0.0206091106 C15.3601404,0.0194887111 15.5322604,0.0987545213 15.647762,0.236903505 L27.926036,14.9101373 C28.1910103,15.2260682 28.6394283,15.3528935 29.01311,15.1785087 C29.5792943,14.9157992 29.7061196,14.2125982 29.3347027,13.769842 L22.3661056,5.46504987 C22.2755161,5.35747484 22.2256919,5.22045823 22.2245595,5.08004451 L22.2019121,0.667203617 C22.1996474,0.315036946 22.4850043,0.0285476608 22.837171,0.0285476608 L29.2962022,0.0285476608 C29.4853077,0.0285476608 29.664222,0.112342946 29.7853854,0.25841851"/><path d="M40.2146146,0.2378094 L36.0565566,5.24967334 C35.9648348,5.36064547 35.9138782,5.50105919 35.9138782,5.64600239 L35.9138782,32.0064137 C35.9138782,32.3404625 36.1845143,32.6099663 36.5174307,32.6099663 L42.4646312,32.6099663 C42.6356189,32.6099663 42.7964152,32.5363623 42.9107845,32.409537 L53.3002674,20.0282175 C53.5652417,19.7122866 54.0136597,19.5854613 54.3873414,19.7598461 C54.9535258,20.0225556 55.0803511,20.7257566 54.7089341,21.1685128 L50.5554057,26.1180964 C50.3685648,26.3411731 50.3674325,26.6672952 50.5542733,26.8926366 L55.1222487,32.3925515 C55.236618,32.5307005 55.4076056,32.6099663 55.5865199,32.6099663 L69.394624,32.6099663 C69.907587,32.6099663 70.1872821,32.0120756 69.8577628,31.6180113 L56.9374358,16.1962817 C56.7517273,15.9743375 56.7494626,15.65048 56.9317739,15.426271 L68.6868936,0.986305121 C69.0073539,0.593373177 68.7310559,0.00567381275 68.2248871,0 L54.8199063,0 C54.6398596,-0.00112039955 54.4677396,0.0781454106 54.352238,0.216294394 L42.073964,14.8895282 C41.8089897,15.2054591 41.3605717,15.3322844 40.98689,15.1578996 C40.4207057,14.8951901 40.2938804,14.1919891 40.6652973,13.7492329 L47.6338944,5.44444076 C47.7244839,5.33686573 47.7743081,5.19984912 47.7754405,5.0594354 L47.7980879,0.646594506 C47.8003526,0.294427835 47.5149957,0.00793855018 47.162829,0.00793855018 L40.7037978,0.00793855018 C40.5146923,0.00793855018 40.335778,0.0917338352 40.2146146,0.2378094"/></svg>
+  <div><b>CRM-KKN</b><small>Kroon Kozijn Nederland</small></div></div>
+  <nav id="nav"></nav>
+  <div class="me"><b>Joep Verstappe</b><span>Management</span></div>
+</aside>
+<main id="main"></main>
+</div>
+<script src="../shared/store.js"></script>
+<script>
+const {eur}=KKN; const $=s=>document.querySelector(s);
+const NAV=[['','Dashboard'],['taken','Mijn werkvoorraad'],['leads','Leads'],['orders','Offertes & orders'],['signalering','Signalering'],['planbord','Planbord'],['backlog','Backlog & capaciteit'],['partners','Montagepartners'],['prestaties','Partnerprestaties'],['facturatie','Facturatie'],['documenten','Documenten'],['dealers','Dealers'],['samenvatting','Weeksamenvatting'],['koppelen','Data koppelen'],['datakwaliteit','Datakwaliteit'],['instellingen','Instellingen']];
+const STEPS=[['akkoord','Akkoord klant & registratie administratie','Verkoop'],['asbest','Asbestinventarisatie','Verkoop'],['registratie_partner','Registratie bij montagepartner & voorcalculatie','Administratie'],['inmeten','Inmeten','Werkvoorbereiding'],['akkoord_administratie','Akkoord project (verkoop) & montagekosten','Administratie'],['productie','Overdracht naar productie','Werkvoorbereiding'],['montage','Montage (partner, ploeg, start & einde)','Planning'],['restwerk','Tweede montage & restwerk','Planning'],['oplevering','100% opgeleverd & nacalculatie','Planning'],['facturatie','Facturatie (30% / 60% / slotsom)','Administratie']];
+const FST={in_productie:['In productie','b-am'],gereed:['Gereed voor levering','b-sk'],geleverd:['Geleverd','b-em']};
+const ref=o=>o.kkn&&!o.factoryHidden?'KKN '+o.kkn:o.id;
+const curStep=o=>o.status==='offerte'?null:o.step>=10?null:STEPS[o.step];
+const crmKnows=o=>KKN.state.koppeling||!o.factoryHidden;
+const payBadge=i=>i.status==='betaald'&&KKN.state.koppeling?'<span class="badge" style="background:#059669;color:#fff">Betaald</span>':i.status==='betaald'?'<span class="badge b-sl" title="De administratie weet het, het CRM niet">Onbekend</span>':i.status==='gefactureerd'?'<span class="badge b-am">Open</span>':i.status==='handwerk'?'<span class="badge b-or">Met de hand maken</span>':'<span class="badge b-sl">Wachtend</span>';
+
+function navHtml(page){const s=KKN.state;const late=s.orders.filter(o=>o.status==='geaccepteerd'&&o.step>=5&&!o.kkn).length;const counts={signalering:late,taken:s.orders.filter(o=>o.status==='geaccepteerd'&&o.step<10).length};
+ return NAV.map(([k,l])=>`<a href="#/${k}" class="${page===k?'on':''}"><span>${l}</span>${counts[k]?`<span class="c ${k==='signalering'?'warn':''}">${counts[k]}</span>`:''}</a>`).join('')}
+
+function dashboard(){const s=KKN.state,os=s.orders;const acc=os.filter(o=>o.status==='geaccepteerd');
+ const open=os.flatMap(o=>o.invoices.filter(i=>i.status==='gefactureerd').map(i=>KKN.incl(o)*i.pct)).reduce((a,b)=>a+b,0);
+ const paid=os.flatMap(o=>o.invoices.filter(i=>i.status==='betaald').map(i=>KKN.incl(o)*i.pct)).reduce((a,b)=>a+b,0);
+ return `<div class="ph"><div><h1>Dashboard</h1><div class="sub">Alle vestigingen · demo</div></div></div>
+ <div class="stats"><div class="card stat"><div class="l">Offertes open</div><div class="v">${os.filter(o=>o.status==='offerte').length}</div></div>
+ <div class="card stat"><div class="l">In orderflow</div><div class="v">${acc.filter(o=>o.step<10).length}</div></div>
+ <div class="card stat"><div class="l">Gefactureerd, nog open</div><div class="v">${s.koppeling?eur(open):'<span class="muted" style="font-size:16px">alleen in de boekhouding</span>'}</div></div>
+ <div class="card stat"><div class="l">Betaald door klanten</div><div class="v ${s.koppeling?'grn':''}">${s.koppeling?eur(paid):'<span class="muted" style="font-size:16px">onbekend</span>'}</div></div></div>
+ <div class="card"><div class="card-h"><span class="card-t">Recente orders</span><a class="link xs" href="#/orders">Alle offertes & orders →</a></div>${table(os.slice(0,5))}</div>`}
+
+function table(os){return `<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Offerte</th><th>Klant</th><th>Plaats</th><th>Vest.</th><th>Adviseur</th><th>Status</th><th class="num">Excl. btw</th><th>Huidige stap</th><th>Betaling</th></tr></thead><tbody>${os.map(o=>{const c=curStep(o);const t30=o.invoices[0];
+ return `<tr><td style="white-space:nowrap"><a class="link" style="font-weight:500" href="#/orders/${o.id}">${ref(o)}</a>${o.main?' <span class="badge b-vi">demo</span>':''}</td><td>${o.klant}</td><td>${o.plaats}</td><td>${o.adm}</td><td class="muted">${o.adviseur}</td>
+ <td><span class="badge ${o.status==='offerte'?'b-sl':'b-em'}">${o.status==='offerte'?'Offerte':'Geaccepteerd'}</span>${o.factory&&crmKnows(o)?' <span class="badge '+FST[o.factory][1]+'">'+FST[o.factory][0]+'</span>':''}</td>
+ <td class="num">${eur(o.excl)}</td><td class="xs">${c?c[1]:o.step>=10?'<span class="grn">Afgerond</span>':'<span class="muted">–</span>'}</td>
+ <td>${o.status==='offerte'?'<span class="muted">–</span>':o.invoices.filter(i=>i.status==='betaald').length&&KKN.state.koppeling?`<span class="grn xs">${Math.round(o.invoices.filter(i=>i.status==='betaald').reduce((a,i)=>a+i.pct,0)*100)}% betaald</span>`:KKN.state.koppeling?'<span class="xs amb">nog niets betaald</span>':'<span class="xs muted">onbekend</span>'}</td></tr>`}).join('')}</tbody></table></div>`}
+
+function orders(){const os=KKN.state.orders;return `<div class="ph"><div><h1>Offertes & orders</h1><div class="sub">${os.length} resultaten · ${eur(os.reduce((a,o)=>a+o.excl,0))} excl. btw</div></div><div><a class="btn" href="../calculatie/index.html">+ Nieuwe offerte (in de calculatie-app)</a></div></div>
+ <div class="card filters"><input class="input" placeholder="Zoek klant, offertenr, KKN, plaats…"><select class="input"><option>Alle statussen</option></select><select class="input"><option>Alle vestigingen</option></select><select class="input"><option>Alle stappen</option></select><button class="btn">Filteren</button></div>
+ <div class="card">${table(os)}</div>`}
+
+function detail(id){const o=KKN.find(id);if(!o)return '<div class="empty">Order niet gevonden.</div>';const s=KKN.state,on=s.koppeling,knows=crmKnows(o);
+ const incl=KKN.incl(o);const realCost=on&&o.exact.fabOrder&&o.exact.hoursBooked;const cost=realCost?KKN.orderCost(o):KKN.calcCost(o);const marge=o.excl-cost,mp=marge/o.excl;
+ const fst=o.factory&&knows?FST[o.factory]:null;
+ const stepState=i=>o.status==='offerte'?'':i<o.step?'done':i===o.step?'act':'';
+ const meta=(code,i)=>{if(i>=o.step)return '';
+  if(code==='productie')return knows&&!o.factoryHidden?(on?`<span class="auto">KKN ${o.kkn} automatisch uit de calculatie-app</span>`:`<span class="hand">KKN ${o.kkn} met de hand overgetikt</span>`):'';
+  if(code==='asbest')return o.bouwjaar>1993?'n.v.t. (bouwjaar '+o.bouwjaar+')':'inventarisatie nodig';
+  if(code==='montage')return 'Partner Monpro · ploeg 2';
+  if(code==='oplevering')return o.exact.restBooked?`<span class="auto">Nacalculatie ${eur(o.restwerk)} uit de boekhouding</span>`:'<span class="hand">Nacalculatie met de hand opzoeken</span>';
+  return 'afgerond'};
+ const paid=o.invoices.filter(i=>i.status==='betaald').reduce((a,i)=>a+i.pct*incl,0),fact=o.invoices.filter(i=>['gefactureerd','betaald'].includes(i.status)).reduce((a,i)=>a+i.pct*incl,0);
+ const banner=!on&&o.status!=='offerte'?`<div class="warnbox"><b>Koppeling uit (zo werkt het vandaag).</b> Het CRM ziet niet wat de fabriek doet, wat er gefactureerd is en of de klant betaald heeft. Iemand moet het opzoeken en overtikken.</div>`:'';
+ return `<a class="back" href="#/orders">← Offertes & orders</a>${banner}
+ <div class="h1row"><h1>${o.klant}</h1><span class="badge ${o.status==='offerte'?'b-sl':'b-em'}">${o.status==='offerte'?'Offerte':'Geaccepteerd'}</span>${fst?`<span class="badge ${fst[1]}">${fst[0]}</span>`:''}<span class="badge b-sl">Montage</span>${on&&o.invoices[0].status==='betaald'?'<span class="badge b-em">'+Math.round(o.invoices.filter(i=>i.status==='betaald').reduce((a,i)=>a+i.pct,0)*100)+'% betaald</span>':''}${o.step>=10?'<span class="badge" style="background:#059669;color:#fff">Flow afgerond</span>':''}
+ <span style="flex:1"></span>${o.status==='offerte'?`<button class="btn btn-ok" onclick="KKN.A.akkoord('${o.id}')">Klant akkoord</button>`:''}</div>
+ <div class="muted" style="margin-top:2px"><b style="color:var(--ink)">${ref(o)}</b>${o.kkn&&knows?' · offerte '+o.id:''} · ${o.vest} · adviseur ${o.adviseur}</div>
+ <div class="card strip"><div><div class="lab">Klant</div><div class="big2">${o.klant}</div><div>${o.tel||'06-…'}</div><div class="muted">${o.mail||''}</div></div>
+ <div><div class="lab">Adres</div><div>${o.adres}</div><div>${o.pc} ${o.plaats}</div></div>
+ <div><div class="lab">Woning</div><div>Bouwjaar <b>${o.bouwjaar}</b>${o.m2?' · '+o.m2+' m²':''}</div><div class="xs ${o.bouwjaar>1993?'grn':'amb'}">${o.bouwjaar>1993?'Na 1993 gebouwd':'Vóór 1994: asbest checken'}</div></div>
+ <div><div class="lab">Bedrag & marge</div><div class="big2">${eur(incl)} <span class="muted xs" style="font-weight:400">incl. btw</span></div><div>${eur(o.excl)} excl. btw</div><div>Marge <span class="${mp<0.23?'red':'grn'}">${eur(marge)} (${(Math.round(mp*1000)/10).toLocaleString('nl-NL')}%)</span> <span class="muted xs">${realCost?'werkelijk':'voorcalculatie'}</span></div></div></div>
+ <div class="grid"><section class="card"><div class="card-h"><span class="card-t">Orderflow na akkoord</span><span class="muted xs">${o.status==='offerte'?'start na akkoord':o.step>=10?'afgerond':'stap '+(o.step+1)+' van 10'}</span></div>
+ <ul class="flow">${STEPS.map((x,i)=>{const st=stepState(i),m=meta(x[0],i);return `<li class="${st}"><span class="dot">${st==='done'?'✓':i+1}</span><span>${x[1]}<br><span class="meta">${x[2]}${m?' · '+m:''}</span></span><span>${st==='act'?`<button class="btn btn-primary btn-sm" onclick="KKN.A.stap('${o.id}')">Stap afronden →</button>`:''}</span></li>`}).join('')}</ul></section>
+ <div class="col">
+ <section class="card"><div class="card-h"><span class="card-t">Fabriek</span>${o.kkn&&knows?`<span class="muted xs">KKN ${o.kkn}</span>`:''}</div><div class="rows">
+  <div><span>Status fabriek</span><span>${fst?`<span class="badge ${fst[1]}">${fst[0]}</span>`:o.kkn&&!knows?'<span class="hand">onbekend</span>':'<span class="muted">nog niet vrijgegeven</span>'}</span></div>
+  <div><span>KKN-nummer</span><span>${o.kkn&&knows?'<b>'+o.kkn+'</b>':o.kkn?`<button class="btn btn-sm" onclick="KKN.A.overtikken('${o.id}')">KKN overtikken</button>`:'<span class="muted">volgt bij productie</span>'}</span></div>
+  <div><span>Posities</span><span>${o.posities}</span></div>
+  ${o.kkn&&knows&&on?`<div><span>Stuklijst in de boekhouding</span><span class="grn">${(o.exact.fabOrder||[]).length} van ${o.lines.length} regels</span></div>`:''}
+ </div></section>
+ <section class="card"><div class="card-h"><span class="card-t">Financieel</span></div><div class="rows">
+  <div><span>Opdrachtwaarde incl. btw</span><span>${eur(incl)}</span></div><div><span>Opdrachtwaarde excl. btw</span><span>${eur(o.excl)}</span></div>
+  <div><span>Kosten fabriek <span class="muted xs">${realCost?'(uit de boekhouding, via KKN)':'(voorcalculatie)'}</span></span><span>${eur(realCost?KKN.factoryCost(o):o.lines.reduce((a,l)=>a+l.cost,0)+o.hours*o.rate)}</span></div>
+  <div><span>Montagekosten</span><span>${eur(o.montage)}</span></div><div><span>Nacalculatie restwerk</span><span>${o.exact.restBooked?eur(o.restwerk):'—'}</span></div>
+  <div><span><b>Marge</b></span><span class="${mp<0.23?'red':'grn'}"><b>${eur(marge)} (${(Math.round(mp*1000)/10).toLocaleString('nl-NL')}%)</b></span></div></div></section>
+ <section class="card"><div class="card-h"><span class="card-t">Boekhouding & stand van het werk</span></div><div class="rows">
+ ${on?`<div><span>Project</span><span>${o.id}${o.kkn?' / '+o.kkn:''}</span></div><div><span>Gefactureerd</span><span>${eur(fact)}</span></div><div><span>Betaald door klant</span><span class="${paid?'grn':''}">${eur(paid)}</span></div><div><span>Openstaand</span><span>${eur(fact-paid)}</span></div><div><span>Kosten geboekt</span><span>${eur(KKN.orderCost(o))}</span></div><div class="tot"><span class="muted">Live uit de boekhouding (${KKN.ADM[o.adm]})</span><span class="muted">bijgewerkt</span></div>`
+ :`<div><span>Project</span><span class="muted">niet gekoppeld</span></div><div><span>Betaald door klant</span><span class="muted">onbekend</span></div><div><span>Kosten geboekt</span><span class="muted">—</span></div><div class="tot"><span class="red">Geen koppeling: alleen via een export met de hand</span></div>`}
+ </div></section>
+ <section class="card"><div class="card-h"><span class="card-t">Facturatie</span></div><div class="rows">${o.invoices.map(i=>`<div><span>${i.label} <span class="muted">· ${eur(incl*i.pct)}</span><br><span class="muted xs">${i.status==='wacht'?'wacht op: '+i.when:i.nr?i.nr+' · ':''}${i.status==='betaald'&&on?'betaald op '+i.paid.split('-').reverse().join('-'):i.status==='gefactureerd'?(on?'open · vervalt over 14 dagen':''):''}</span></span><span>${payBadge(i)}</span></div>`).join('')}</div></section>
+ </div></div>`}
+
+function facturatie(){const s=KKN.state,on=s.koppeling;const rows=s.orders.flatMap(o=>o.invoices.filter(i=>i.status!=='wacht').map(i=>({o,i})));
+ return `<div class="ph"><div><h1>Facturatie</h1><div class="sub">Termijnen 30 / 60 / slot per order${on?' · betaalstatus live uit de boekhouding':''}</div></div></div>
+ ${on?'':'<div class="warnbox">Zonder koppeling ziet het CRM niet of een factuur betaald is. Bij elke vraag van een klant of montagepartner moet de administratie het opzoeken.</div>'}
+ <div class="card"><table class="tbl"><thead><tr><th>Order</th><th>Klant</th><th>Vest.</th><th>Termijn</th><th>Factuur</th><th class="num">Bedrag</th><th>Status</th></tr></thead><tbody>${rows.map(({o,i})=>`<tr><td><a class="link" href="#/orders/${o.id}">${ref(o)}</a></td><td>${o.klant}</td><td>${o.adm}</td><td>${i.label}</td><td class="muted">${i.nr||'—'}</td><td class="num">${eur(KKN.incl(o)*i.pct)}</td><td>${payBadge(i)}</td></tr>`).join('')}</tbody></table></div>`}
+
+// Data koppelen: oude orders matchen op offertenummer + adres (driehoeksmeting over drie systemen)
+const LEGACY=[
+ {crm:['AR-2025-311','Rijnkade 4','6811 HA'],calc:['AR-2025-311','Rijnkade 4','6811 HA'],boek:['AR-2025-311','Rijnkade 4','6811 HA']},
+ {crm:['NM-2025-207','Graafseweg 120','6512 BW'],calc:['NM-2025-207','Graafseweg 120','6512 BW'],boek:['NM-2025-207','Graafseweg 122','6512 BW']},
+ {crm:['AR-2025-290','Steenstraat 17','6828 CB'],calc:['AR-2025-209','Steenstraat 17','6828 CB'],boek:['AR-2025-290','Steenstraat 17','6828 CB']},
+ {crm:['EH-2025-118','Stratumseind 9','5611 ET'],calc:['EH-2025-118','Stratumseind 9','5611 ET'],boek:null},
+ {crm:['AM-2025-044','Arnhemseweg 2','3817 CH'],calc:['AM-2025-044','Arnhemseweg 2','3817 CH'],boek:['AM-2025-044','Arnhemseweg 2','3817 CH']},
+ {crm:['5-2025-019','Molenstraat 50','6511 HK'],calc:['NM-2025-019','Molenstraat 50','6511 HK'],boek:['NM-2025-019','Molenstraat 50','6511 HK']},
+];
+function koppelen(){const norm=a=>a?(a[2].replace(/\s/g,'')+' '+a[1].match(/\d+/)[0]):'';
+ const res=LEGACY.map(r=>{const srcs=[r.crm,r.calc,r.boek].filter(Boolean);const offs=new Set(srcs.map(x=>x[0])),adr=new Set(srcs.map(norm));
+  let v,cls,why;if(!r.boek){v='Twijfel';cls='b-am';why='Niet gevonden in de boekhouding'}else if(offs.size===1&&adr.size===1){v='Zeker';cls='b-em';why='Offertenummer én adres gelijk in alle drie'}else if(adr.size===1){v='Bijna zeker';cls='b-sk';why='Adres gelijk; offertenummer wijkt af in één systeem (typfout?)'}else if(offs.size===1){v='Twijfel';cls='b-am';why='Offertenummer gelijk, huisnummer wijkt af'}else{v='Geen match';cls='b-ro';why=''}
+  return {r,v,cls,why}});
+ const cell=(a,ref)=>a?`<div>${a[0]===ref[0]?a[0]:'<span class="red">'+a[0]+'</span>'}</div><div class="muted xs">${a[1]}, ${a[2]}</div>`:'<span class="muted">—</span>';
+ return `<div class="ph"><div><h1>Data koppelen</h1><div class="sub">Oude orders aan elkaar koppelen zonder KKN: offertenummer plus adres (postcode + huisnummer) in drie systemen</div></div><button class="btn btn-primary">Zekere matches koppelen (${res.filter(x=>x.v==='Zeker').length})</button></div>
+ <div class="okbox">Oude PR- en HP-nummers doen niet mee. Een match is pas zeker als offertenummer én adres in alle drie de systemen gelijk zijn; de rest gaat naar een uitzoeklijst voor de vestiging.</div>
+ <div class="card"><table class="tbl"><thead><tr><th>CRM-KKN</th><th>Calculatie</th><th>Boekhouding</th><th>Uitkomst</th><th>Waarom</th></tr></thead><tbody>${res.map(({r,v,cls,why})=>`<tr><td>${cell(r.crm,r.crm)}</td><td>${cell(r.calc,r.crm)}</td><td>${cell(r.boek,r.crm)}</td><td><span class="badge ${cls}">${v}</span></td><td class="xs muted">${why}</td></tr>`).join('')}</tbody></table></div>`}
+
+function stub(t){return `<div class="ph"><div><h1>${t}</h1><div class="sub">Dit scherm zit niet in de demo.</div></div></div><div class="card empty">In het echte CRM-KKN staat hier ${t.toLowerCase()}. Voor de demo kijk je bij <a class="link" href="#/orders">Offertes & orders</a>, <a class="link" href="#/facturatie">Facturatie</a> of <a class="link" href="#/koppelen">Data koppelen</a>.</div>`}
+
+function render(){const h=location.hash.replace(/^#\/?/,'');const [page,id]=h.split('/');
+ $('#nav').innerHTML=navHtml(page||'');
+ $('#main').innerHTML=page==='orders'&&id?detail(decodeURIComponent(id)):page==='orders'?orders():page==='facturatie'?facturatie():page==='koppelen'?koppelen():!page?dashboard():stub((NAV.find(n=>n[0]===page)||['','Pagina'])[1]);
+ document.title=(page==='orders'&&id?id+' · ':'')+'CRM-KKN · demo'}
+window.addEventListener('hashchange',()=>{render();scrollTo(0,0)});KKN.on(render);render();
+</script>
+<script src="../shared/bar.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo: één order, drie systemen · Kroon Kozijn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#1c4e5c;--brand:#3391ab;--dark:#2a768c;--light:#f5f9fb;--acc:#e4a11b;--ink:#202020;--soft:#5f6b73}
+*{box-sizing:border-box}body{margin:0;font:15px/1.6 Poppins,system-ui,sans-serif;color:var(--ink);background:#fff}
+a{color:var(--dark)}
+.hero{background:var(--deep);color:#fff;padding:56px 24px 64px}
+.in{max-width:1080px;margin:0 auto}
+.hero h1{font-size:40px;line-height:1.15;margin:12px 0 12px;font-weight:600;max-width:820px}
+.hero p{max-width:720px;color:#d6e6eb;margin:0}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:600;color:var(--acc)}
+.sites{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:-36px}
+.site{background:#fff;border:1px solid #dbe5ea;border-radius:14px;padding:20px;text-decoration:none;color:inherit;box-shadow:0 6px 20px rgba(28,78,92,.08);display:flex;flex-direction:column;gap:6px;transition:.15s}
+.site:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(28,78,92,.14)}
+.site .k{font-size:12px;font-weight:600;color:var(--brand);text-transform:uppercase;letter-spacing:.08em}
+.site h3{margin:0;font-size:20px}.site p{margin:0;color:var(--soft);font-size:14px}.site .go{margin-top:auto;font-weight:600;color:var(--dark);padding-top:8px}
+section{padding:48px 24px}section.alt{background:var(--light)}
+h2{font-size:26px;margin:0 0 6px}.lead{color:var(--soft);margin:0 0 24px;max-width:760px}
+ol.steps{list-style:none;padding:0;margin:0;display:grid;gap:12px;counter-reset:s}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:start;background:#fff;border:1px solid #dbe5ea;border-radius:12px;padding:14px 16px}
+ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--deep);color:#fff;display:grid;place-items:center;font-weight:600}
+ol.steps b{display:block}ol.steps span{color:var(--soft);font-size:14px}
+ol.steps a.btn{white-space:nowrap}
+.btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;border-radius:8px;padding:8px 14px;font-weight:500;font-size:14px;border:0;cursor:pointer;font-family:inherit}
+.btn.o{background:#fff;color:var(--dark);border:1px solid #b9cfd7}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border:1px solid #dbe5ea;border-radius:12px;padding:18px;background:#fff}.box h3{margin:0 0 6px;font-size:17px}.box ul{margin:0;padding-left:18px;color:var(--soft);font-size:14px}
+.box.bad{border-color:#f3c9bd;background:#fff8f5}.box.good{border-color:#b9e2c8;background:#f4fbf6}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+footer{padding:28px 24px 100px;color:var(--soft);font-size:13px;border-top:1px solid #e6edf0}
+@media(max-width:860px){.sites,.two{grid-template-columns:1fr}.hero h1{font-size:30px}ol.steps li{grid-template-columns:44px 1fr}ol.steps a.btn{grid-column:2}}
+</style>
+</head>
+<body data-site="start" data-base=".">
+<div class="hero"><div class="in"><div class="eyebrow">Demo · Kroon Kozijn Nederland</div>
+<h1>Eén order, drie systemen, één nummer: van offerte tot wat de order écht kostte</h1>
+<p>Drie nagebouwde schermen die samenwerken zoals ze straks gekoppeld zijn. Open ze naast elkaar in dezelfde browser: wat je in het ene doet, verschijnt direct in het andere. Met de schakelaar onderin zie je hoe het vandaag gaat.</p></div></div>
+<div class="in" style="padding:0 24px"><div class="sites">
+<a class="site" href="calculatie/index.html" target="kkn-calc"><span class="k">Rol van Ramasoft</span><h3>Calculatie & werkvoorbereiding</h3><p>Offerte, tekening, stuklijst. De werkvoorbereiding geeft vrij voor productie en maakt het KKN-nummer.</p><span class="go">Openen →</span></a>
+<a class="site" href="boekhouding/index.html" target="kkn-boek"><span class="k">Rol van Exact Bouw</span><h3>Boekhouding</h3><p>Fabriek (KK Nederland) en vestigingen. Fabrieksorders, inkoop, voorraad, facturen, betalingen en de nacalculatie per KKN.</p><span class="go">Openen →</span></a>
+<a class="site" href="crm/index.html" target="kkn-crm"><span class="k">Ons eigen CRM</span><h3>CRM-KKN</h3><p>De orderkaart en orderflow zoals in CRM-KKN, aangevuld met fabrieksstatus, kosten en of de klant betaald heeft.</p><span class="go">Openen →</span></a>
+</div></div>
+
+<section><div class="in"><h2>Draaiboek: tien minuten, één order</h2><p class="lead">Order AR-2026-118 van Fam. de Vries in Arnhem, € 9.950 excl. btw. Zet de drie sites naast elkaar (elk een eigen venster) en loop deze stappen door.</p>
+<ol class="steps">
+<li><div><b>Begin met de koppeling uit</b><span>Zet onderin de schakelaar op <i>uit</i> en doorloop stap 2 tot en met 5. Dit is vandaag.</span></div><button class="btn o" onclick="KKN.A.reset();KKN.A.koppeling(false)">Start: koppeling uit</button></li>
+<li><div><b>CRM: klant gaat akkoord</b><span>Open de order, klik <i>Klant akkoord</i> en rond de stappen tot <i>Overdracht naar productie</i> af. Zonder koppeling moet de eerste factuur met de hand.</span></div><a class="btn" href="crm/index.html#/orders/AR-2026-118" target="kkn-crm">Naar de order</a></li>
+<li><div><b>Calculatie: vrijgeven voor productie</b><span>De werkvoorbereiding maakt het KKN. Zonder koppeling vallen de roosters weg, gaat inkoop buiten het systeem om en weet het CRM het KKN niet.</span></div><a class="btn" href="calculatie/index.html" target="kkn-calc">Naar de calculatie</a></li>
+<li><div><b>Calculatie: gereedmelden</b><span>De fabriek is klaar. Het magazijn is leeg, maar de boekhouding denkt dat alles er nog ligt.</span></div><a class="btn" href="calculatie/index.html" target="kkn-calc">Gereedmelden</a></li>
+<li><div><b>Boekhouding: kijk wat er misging</b><span>Kies <i>KK Nederland B.V.</i>: de fabrieksorder mist het rooster, inkoop staat niet op de order en de voorraad wijkt af.</span></div><a class="btn" href="boekhouding/index.html#/voorraad" target="kkn-boek">Naar de voorraad</a></li>
+<li><div><b>Nu met de koppeling aan</b><span>Zet alles terug en de schakelaar op <i>aan</i>. Doe stap 2 tot en met 4 opnieuw.</span></div><button class="btn o" onclick="KKN.A.reset();KKN.A.koppeling(true)">Opnieuw: koppeling aan</button></li>
+<li><div><b>Zie het doorlopen</b><span>Alle regels komen over, ook horren en roosters; inkooporders staan op het KKN; het CRM krijgt KKN en fabrieksstatus vanzelf; de voorraad klopt.</span></div><a class="btn" href="boekhouding/index.html#/fo/AR-2026-118" target="kkn-boek">Fabrieksorder</a></li>
+<li><div><b>CRM: montage en oplevering</b><span>Rond de rest van de orderflow af. Montage en restwerk komen op het KKN; termijnfacturen gaan vanzelf de deur uit.</span></div><a class="btn" href="crm/index.html#/orders/AR-2026-118" target="kkn-crm">Naar de order</a></li>
+<li><div><b>Boekhouding: klant betaalt</b><span>Verwerk in Arnhem de betaling van de 30%-termijn. Het CRM laat direct zien: betaald.</span></div><a class="btn" href="boekhouding/index.html#/debiteuren" target="kkn-boek">Openstaande posten</a></li>
+<li><div><b>De vraag beantwoord: wat kostte deze order?</b><span>Nacalculatie per KKN: fabriek en vestiging samen, € 6.467 werkelijk tegen € 9.950 verkoop. Geen schatting, geen Excel.</span></div><a class="btn" href="boekhouding/index.html#/kostprijs/AR-2026-118" target="kkn-boek">Nacalculatie</a></li>
+</ol>
+<div class="tools"><a class="btn o" href="crm/index.html#/koppelen" target="kkn-crm">Extra: oude orders koppelen (offertenummer + adres)</a></div></div></section>
+
+<section class="alt"><div class="in"><h2>Wat de kijker moet onthouden</h2><p class="lead">Het verschil zit niet in een nieuw pakket, maar in één nummer dat overal meegaat.</p>
+<div class="two"><div class="box bad"><h3>Vandaag (koppeling uit)</h3><ul><li>Roosters en ander maatwerk vallen weg op weg naar de boekhouding</li><li>Inkoop staat niet op de order, dus geen kostprijs per order</li><li>Voorraad wordt niet afgeboekt: tekorten blijken pas bij de telling</li><li>Het CRM weet niet wat de fabriek doet of of de klant betaald heeft</li></ul></div>
+<div class="box good"><h3>Straks (koppeling aan)</h3><ul><li>Elke regel uit de calculatie in de boekhouding, met KKN</li><li>Inkoop, uren, montage en restwerk op hetzelfde nummer</li><li>Voorraad per order of via backflush afgeboekt: telling klopt</li><li>Per order: status, kosten, facturen en betaling in het CRM</li></ul></div></div></div></section>
+
+<footer><div class="in">Demo met verzonnen klanten, nummers en bedragen. De schermen voor calculatie en boekhouding zijn nagebouwd naar de werkwijze, niet de echte pakketten; er wordt niets naar een echt systeem gestuurd. Gegevens staan alleen in deze browser. <a href="#" onclick="if(confirm('Alles terugzetten?'))KKN.A.reset();return false">Demo terugzetten</a>.</div></footer>
+<script src="shared/store.js"></script>
+<script src="shared/bar.js"></script>
+</body>
+</html>
