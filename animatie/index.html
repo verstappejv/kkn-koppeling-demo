@@ -227,7 +227,7 @@ function draw(t) {
     set(pay, { display: 'flex', left: (LANEX[3] + 24) + 'px', top: '630px', opacity: pp, background: today ? '#fff' : '#1e8a4c', color: today ? '#c0392b' : '#fff', border: '2px solid ' + (today ? '#c0392b' : '#1e8a4c') });
   }
   if (!today && ph.i >= 2) { crmBadge.innerHTML = ph.i >= 4 ? 'KKN 140231 · Gereed voor levering' : 'KKN 140231 · In productie'; set(crmBadge, { display: 'flex', left: (LANEX[3] + 24) + 'px', top: '584px', opacity: ph.i === 2 ? clamp(p * 3 - 1) : 1, background: '#fff8e6', color: '#1c4e5c', border: '2px solid #e4a11b', fontSize: '15px' }); }
-  if (today && ph.i >= 1) { crmBadge.innerHTML = 'Fabriek: <b>&nbsp;onbekend</b>'; set(crmBadge, { display: 'flex', left: (LANEX[3] + 24) + 'px', top: '584px', opacity: ph.i === 1 ? clamp(p * 3 - 1) : 1, background: '#fff', color: '#c0392b', border: '2px dashed #c0392b', fontSize: '15px' }); }
+  if (today && ph.i >= 2) { crmBadge.innerHTML = 'Uitgezet · productiestatus <b>&nbsp;onbekend</b>'; set(crmBadge, { display: 'flex', left: (LANEX[3] + 24) + 'px', top: '584px', opacity: ph.i === 2 ? clamp(p * 3 - 1) : 1, background: '#fff', color: '#c0392b', border: '2px dashed #c0392b', fontSize: '15px' }); }
 
   // ---------- onderste paneel: tellers of kostprijs
   const cp = $('#costpanel'), stats = $('#stats');
