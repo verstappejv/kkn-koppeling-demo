@@ -21,7 +21,7 @@ body{margin:0;background:#8b97a6;font:12.5px/1.4 "Segoe UI",Tahoma,Arial,sans-se
 .tb button:hover:not(:disabled){background:#dcecf9;border-color:#9cc7ea}.tb button:disabled{opacity:.4;cursor:default}
 .tb button.hl{background:#fff4d6;border-color:#e8c46a}
 .tb .sep{width:1px;height:38px;background:var(--line);margin:0 4px}
-.body{flex:1;display:grid;grid-template-columns:230px minmax(0,1fr) 250px;min-height:0}
+.body{flex:1;display:grid;grid-template-columns:290px minmax(0,1fr) 250px;min-height:0}
 .tree{border-right:1px solid var(--line);overflow:auto;background:#fbfcfd;padding:4px 0}
 .tree .h{font-weight:600;padding:4px 8px;color:var(--soft);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
 .tree a{display:flex;gap:6px;align-items:center;padding:2px 8px 2px 18px;color:var(--txt);text-decoration:none;white-space:nowrap;cursor:pointer}
@@ -46,6 +46,7 @@ table.g{width:100%;border-collapse:collapse;font-size:12.5px}
 .opm .hd small{display:block;color:var(--soft);font-family:"Segoe UI",Arial;font-size:10.5px}
 .note{margin:8px 0;padding:6px 10px;border:1px solid;font-size:12.5px}.note.w{background:#fff8e1;border-color:#e8c46a}.note.ok{background:#eaf7ee;border-color:#9fd3ae}.note.e{background:#fdecea;border-color:#efa59c}
 .drawing{background:#fff;border:1px solid #e3e7ec}
+.xlink{display:inline-block;margin:2px 4px 2px 0;padding:2px 8px;border:1px solid var(--line);background:#fff;color:var(--selb);text-decoration:none;border-radius:2px}.xlink:hover{background:#eef4fb}
 .empty{color:var(--soft);padding:30px;text-align:center}
 @media(max-width:1000px){.body{grid-template-columns:1fr}.tree,.side{display:none}body{padding:6px 6px 76px}}
 </style>
@@ -68,12 +69,14 @@ const {eur}=KKN,eur2=KKN.eur2;const $=s=>document.querySelector(s);
 let cur=sessionStorage.getItem('demo-calc')||'AR-2026-118',tab=sessionStorage.getItem('demo-calc-tab')||'tekening';
 const TABS=[['tekening','Tekening'],['posities','Posities'],['stuklijst','Stuklijst'],['productie','Productie (OPM)'],['export','Export']];
 const KIND={backflush:['Voorraad – backflush','t1'],perorder:['Voorraad – per order','t2'],inkoop:['Inkoop op order','t3']};
-const sel=id=>{cur=id;sessionStorage.setItem('demo-calc',id);render()};
+const sel=id=>{cur=id;sessionStorage.setItem('demo-calc',id);history.replaceState(null,'','#/'+id);render()};
 const setTab=t=>{tab=t;sessionStorage.setItem('demo-calc-tab',t);render()};
-function tree(){const s=KKN.state;const offs=s.orders.filter(o=>!o.kkn),ords=s.orders.filter(o=>o.kkn);
- const item=o=>`<a class="${o.id===cur?'on':''}" onclick="sel('${o.id}')"><span class="st" style="background:${o.kkn?(o.factory==='in_productie'?'#e8a317':'#2e9d55'):o.status==='geaccepteerd'?'#0078d4':'#b8c0ca'}"></span>${o.kkn?o.kkn+' · ':''}${o.id} <span style="color:#5a6470">${o.klant}</span></a>`;
- return `<div class="h">Offertes</div>${offs.map(item).join('')||'<div class="empty">—</div>'}<div class="h" style="margin-top:8px">Productieorders (KKN)</div>${ords.map(item).join('')}
- <div style="padding:10px 8px;color:#5a6470;font-size:11.5px">● grijs offerte · ● blauw akkoord · ● oranje in productie · ● groen gereed</div>`}
+function tree(){const s=KKN.state;const offs=s.orders.filter(o=>!o.kkn&&o.status!=='geaccepteerd'),acc=s.orders.filter(o=>!o.kkn&&o.status==='geaccepteerd'),ords=s.orders.filter(o=>o.kkn);
+ const lab=o=>o.kkn?(o.factory==='in_productie'?['In productie','#e8a317']:['Gereed','#2e9d55']):o.status==='geaccepteerd'?['Akkoord','#0078d4']:['Offerte','#8a96a3'];
+ const item=o=>{const l=lab(o);return `<a class="${o.id===cur?'on':''}" onclick="sel('${o.id}')"><span class="st" style="background:${l[1]}"></span><span style="overflow:hidden;text-overflow:ellipsis">${o.kkn?o.kkn+' · ':''}${o.id} <span style="color:#5a6470">${o.klant}</span></span><span style="margin-left:auto;font-size:10.5px;color:#fff;background:${l[1]};border-radius:2px;padding:0 4px">${l[0]}</span></a>`};
+ return `<div class="h">Offertes</div>${offs.map(item).join('')||'<div style="padding:2px 18px;color:#5a6470">geen</div>'}
+ <div class="h" style="margin-top:8px">Akkoord · klaar voor werkvoorbereiding</div>${acc.map(item).join('')||'<div style="padding:2px 18px;color:#5a6470">geen</div>'}
+ <div class="h" style="margin-top:8px">Productieorders (KKN)</div>${ords.map(item).join('')}`}
 function toolbar(o){const can=o&&o.status==='geaccepteerd'&&!o.kkn,ready=o&&o.factory==='in_productie';
  return `<button onclick="sel(KKN.A.nieuweOfferte())"><b>🗋</b>Nieuw</button><button disabled><b>📂</b>Openen</button><button disabled><b>💾</b>Opslaan</button><span class="sep"></span>
  <button onclick="setTab('posities')"><b>▦</b>Positie</button><button onclick="setTab('tekening')"><b>⬚</b>Tekenen</button><button onclick="setTab('stuklijst')"><b>☰</b>Stuklijst</button><button onclick="alert('Prijs berekend: '+KKN.eur(KKN.find(cur).excl)+' excl. btw')"><b>∑</b>Prijs</button><button onclick="window.print()"><b>🖶</b>Afdrukken</button><span class="sep"></span>
@@ -111,7 +114,7 @@ function productie(o){const s=KKN.state;
 function exportTab(o){const s=KKN.state;const mine=s.log.filter(l=>l.msg.includes(o.id)||(o.kkn&&l.msg.includes(o.kkn)));
  return `<div class="note ${s.koppeling?'ok':'w'}">${s.koppeling?'Koppeling actief: elke stap gaat direct naar de boekhouding en het CRM, met offertenummer en KKN.':'Oude export: draait één keer per nacht, neemt niet alle regels mee (roosters vallen weg) en kent geen inkoop of gereedmelding.'}</div>
  <table class="g"><thead><tr><th>Tijd</th><th>Naar</th><th>Bericht</th></tr></thead><tbody>${mine.map(l=>`<tr style="${l.ok?'':'color:#a3271a'}"><td>${l.t}</td><td>${l.to||'—'}</td><td>${l.msg}</td></tr>`).join('')||'<tr><td colspan="3">Nog niets verstuurd voor deze order.</td></tr>'}</tbody></table>`}
-function side(o){return `<div class="grp"><h4>Offerte</h4><div class="kv"><span>Offertenr.</span><span>${o.id}</span><span>KKN</span><span>${o.kkn||'—'}</span><span>Status</span><span>${o.kkn?(o.factory==='in_productie'?'In productie':'Gereed'):o.status==='geaccepteerd'?'Akkoord':'Offerte'}</span><span>Datum</span><span>${o.date.split('-').reverse().join('-')}</span></div></div>
+function side(o){return `<div class="grp"><h4>Openen in</h4><div style="padding:6px 8px">${KKN.links(o,'..','calc')}</div></div><div class="grp"><h4>Offerte</h4><div class="kv"><span>Offertenr.</span><span>${o.id}</span><span>KKN</span><span>${o.kkn||'—'}</span><span>Status</span><span><b style="color:${o.kkn?'#1b1f24':o.status==='geaccepteerd'?'#0078d4':'#5a6470'}">${o.kkn?(o.factory==='in_productie'?'In productie':'Gereed'):o.status==='geaccepteerd'?'Akkoord klant ('+(o.decided||'').split('-').reverse().join('-')+')':'Offerte'}</b></span><span>Datum</span><span>${o.date.split('-').reverse().join('-')}</span></div></div>
  <div class="grp"><h4>Klant</h4><div class="kv"><span>Naam</span><span>${o.klant}</span><span>Adres</span><span>${o.adres}</span><span>Plaats</span><span>${o.pc} ${o.plaats}</span><span>Bouwjaar</span><span>${o.bouwjaar}</span></div></div>
  <div class="grp"><h4>Verkoop</h4><div class="kv"><span>Vestiging</span><span>${o.adm} ${o.vest}</span><span>Adviseur</span><span>${o.adviseur}</span><span>Posities</span><span>${o.posities}</span><span>Prijs excl.</span><span><b>${eur2(o.excl)}</b></span></div></div>`}
 function render(){const s=KKN.state;let o=KKN.find(cur);if(!o){o=s.orders[0];cur=o.id}
@@ -121,6 +124,8 @@ function render(){const s=KKN.state;let o=KKN.find(cur);if(!o){o=s.orders[0];cur
  $('#pane').innerHTML=tab==='tekening'?frame(o):tab==='posities'?posities(o):tab==='stuklijst'?stuklijst(o):tab==='productie'?productie(o):exportTab(o);
  $('#side').innerHTML=side(o);
  $('#sb').innerHTML=`<span>Gebruiker: <b>werkvoorbereiding</b></span><span>Database: <b>KKN-PROD (demo)</b></span><span>Export naar boekhouding: <b style="color:${s.koppeling?'#1e7a3c':'#a3271a'}">${s.koppeling?'koppeling actief':'oud script'}</b></span>`}
+const fromHash=()=>{const id=decodeURIComponent(location.hash.replace(/^#\/?/,''));if(id&&KKN.find(id)){cur=id;sessionStorage.setItem('demo-calc',id)}};
+window.addEventListener('hashchange',()=>{fromHash();render()});fromHash();
 KKN.on(render);render();
 </script>
 <script src="../shared/bar.js"></script>

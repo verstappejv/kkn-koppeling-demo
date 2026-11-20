@@ -60,6 +60,7 @@ main{flex:1;min-width:0;padding:32px;padding-bottom:90px}
 .warnbox{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
 .okbox{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px}
 .empty{padding:40px;text-align:center;color:var(--s500)}
+.xlink{display:inline-flex;align-items:center;border:1px solid var(--s300);border-radius:6px;padding:3px 8px;font-size:12px;color:var(--s600);background:#fff;margin-left:6px}.xlink:hover{border-color:var(--brand);color:var(--brand)}
 .tri{font-size:12px;display:inline-grid;grid-template-columns:auto auto;gap:2px 8px}
 @media (max-width:1000px){aside{display:none}.grid,.strip,.stats{grid-template-columns:1fr}main{padding:16px}}
 </style>
@@ -98,11 +99,11 @@ function dashboard(){const s=KKN.state,os=s.orders;const acc=os.filter(o=>o.stat
  <div class="card stat"><div class="l">Betaald door klanten</div><div class="v ${s.koppeling?'grn':''}">${s.koppeling?eur(paid):'<span class="muted" style="font-size:16px">onbekend</span>'}</div></div></div>
  <div class="card"><div class="card-h"><span class="card-t">Recente orders</span><a class="link xs" href="#/orders">Alle offertes & orders →</a></div>${table(os.slice(0,5))}</div>`}
 
-function table(os){return `<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Offerte</th><th>Klant</th><th>Plaats</th><th>Vest.</th><th>Adviseur</th><th>Status</th><th class="num">Excl. btw</th><th>Huidige stap</th><th>Betaling</th></tr></thead><tbody>${os.map(o=>{const c=curStep(o);const t30=o.invoices[0];
+function table(os){return `<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Offerte</th><th>Klant</th><th>Plaats</th><th>Vest.</th><th>Adviseur</th><th>Status</th><th class="num">Excl. btw</th><th>Huidige stap</th><th>Betaling</th><th>Openen in</th></tr></thead><tbody>${os.map(o=>{const c=curStep(o);const t30=o.invoices[0];
  return `<tr><td style="white-space:nowrap"><a class="link" style="font-weight:500" href="#/orders/${o.id}">${ref(o)}</a>${o.main?' <span class="badge b-vi">demo</span>':''}</td><td>${o.klant}</td><td>${o.plaats}</td><td>${o.adm}</td><td class="muted">${o.adviseur}</td>
  <td><span class="badge ${o.status==='offerte'?'b-sl':'b-em'}">${o.status==='offerte'?'Offerte':'Geaccepteerd'}</span>${o.factory&&crmKnows(o)?' <span class="badge '+FST[o.factory][1]+'">'+FST[o.factory][0]+'</span>':''}</td>
  <td class="num">${eur(o.excl)}</td><td class="xs">${c?c[1]:o.step>=10?'<span class="grn">Afgerond</span>':'<span class="muted">–</span>'}</td>
- <td>${o.status==='offerte'?'<span class="muted">–</span>':o.invoices.filter(i=>i.status==='betaald').length&&KKN.state.koppeling?`<span class="grn xs">${Math.round(o.invoices.filter(i=>i.status==='betaald').reduce((a,i)=>a+i.pct,0)*100)}% betaald</span>`:KKN.state.koppeling?'<span class="xs amb">nog niets betaald</span>':'<span class="xs muted">onbekend</span>'}</td></tr>`}).join('')}</tbody></table></div>`}
+ <td>${o.status==='offerte'?'<span class="muted">–</span>':o.invoices.filter(i=>i.status==='betaald').length&&KKN.state.koppeling?`<span class="grn xs">${Math.round(o.invoices.filter(i=>i.status==='betaald').reduce((a,i)=>a+i.pct,0)*100)}% betaald</span>`:KKN.state.koppeling?'<span class="xs amb">nog niets betaald</span>':'<span class="xs muted">onbekend</span>'}</td><td class="xs" style="white-space:nowrap;line-height:1.7"><a class="link" href="../calculatie/index.html#/${o.id}">Calculatie ↗</a><br><a class="link" href="../boekhouding/index.html#/project/${o.id}">Boekhouding ↗</a></td></tr>`}).join('')}</tbody></table></div>`}
 
 function orders(){const os=KKN.state.orders;return `<div class="ph"><div><h1>Offertes & orders</h1><div class="sub">${os.length} resultaten · ${eur(os.reduce((a,o)=>a+o.excl,0))} excl. btw</div></div><div><a class="btn" href="../calculatie/index.html">+ Nieuwe offerte (in de calculatie-app)</a></div></div>
  <div class="card filters"><input class="input" placeholder="Zoek klant, offertenr, KKN, plaats…"><select class="input"><option>Alle statussen</option></select><select class="input"><option>Alle vestigingen</option></select><select class="input"><option>Alle stappen</option></select><button class="btn">Filteren</button></div>
@@ -122,7 +123,7 @@ function detail(id){const o=KKN.find(id);if(!o)return '<div class="empty">Order 
  const banner=!on&&o.status!=='offerte'?`<div class="warnbox"><b>Koppeling uit (zo werkt het vandaag).</b> Het CRM ziet niet wat de fabriek doet, wat er gefactureerd is en of de klant betaald heeft. Iemand moet het opzoeken en overtikken.</div>`:'';
  return `<a class="back" href="#/orders">← Offertes & orders</a>${banner}
  <div class="h1row"><h1>${o.klant}</h1><span class="badge ${o.status==='offerte'?'b-sl':'b-em'}">${o.status==='offerte'?'Offerte':'Geaccepteerd'}</span>${fst?`<span class="badge ${fst[1]}">${fst[0]}</span>`:''}<span class="badge b-sl">Montage</span>${on&&o.invoices[0].status==='betaald'?'<span class="badge b-em">'+Math.round(o.invoices.filter(i=>i.status==='betaald').reduce((a,i)=>a+i.pct,0)*100)+'% betaald</span>':''}${o.step>=10?'<span class="badge" style="background:#059669;color:#fff">Flow afgerond</span>':''}
- <span style="flex:1"></span>${o.status==='offerte'?`<button class="btn btn-ok" onclick="KKN.A.akkoord('${o.id}')">Klant akkoord</button>`:''}</div>
+ <span style="flex:1"></span>${KKN.links(o,'..','crm')}${o.status==='offerte'?`<button class="btn btn-ok" style="margin-left:8px" onclick="KKN.A.akkoord('${o.id}')">Klant akkoord</button>`:''}</div>
  <div class="muted" style="margin-top:2px"><b style="color:var(--ink)">${ref(o)}</b>${o.kkn&&knows?' · offerte '+o.id:''} · ${o.vest} · adviseur ${o.adviseur}</div>
  <div class="card strip"><div><div class="lab">Klant</div><div class="big2">${o.klant}</div><div>${o.tel||'06-…'}</div><div class="muted">${o.mail||''}</div></div>
  <div><div class="lab">Adres</div><div>${o.adres}</div><div>${o.pc} ${o.plaats}</div></div>

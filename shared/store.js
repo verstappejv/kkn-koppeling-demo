@@ -3,7 +3,7 @@
 // dan ziet elke site direct wat een andere site doet. Alle namen en bedragen zijn verzonnen.
 (function () {
   const KEY = 'kkn-demo-v1';
-  const VERSION = 3;
+  const VERSION = 4;
 
   const LINES = () => [
     { art: 'PRF-W', omschr: 'Profiel wit (standaard)', qty: 56, unit: 'm', cost: 616, kind: 'backflush', group: 'Profielen' },
@@ -51,6 +51,7 @@
       if (ord.kkn) { ord.exact.fabOrder = ord.lines.map((l) => ({ ...l })); ord.exact.inkoop = ord.lines.filter((l) => l.kind === 'inkoop').map((l) => ({ ...l, kkn: ord.kkn, status: 'besteld' })); ord.exact.picked = true; }
       if (ord.factory === 'geleverd') { ord.exact.backflushed = true; ord.exact.hoursBooked = true; ord.exact.montageBooked = true; ord.invoices[0].status = 'betaald'; ord.invoices[0].paid = '2026-10-09'; ord.invoices[1].status = 'gefactureerd'; ord.exact.inkoop.forEach((i) => (i.status = 'ontvangen')); }
     }
+    for (const ord of s.orders) ord.invoices.forEach((i) => { if (i.status !== 'wacht') i.nr = 'VF' + ord.adm + '-' + (25900 + s.seq++); });
     s.log.push({ t: stamp(), from: 'Systeem', to: '', msg: 'Demo klaargezet: vijf orders, vier vestigingen, één fabriek.', ok: true });
     return s;
   }
@@ -177,8 +178,17 @@
   function montage(o) { if (state.koppeling && o.kkn) { o.exact.montageBooked = true; log('CRM-KKN', 'Boekhouding ' + o.adm, `Montagekosten ${eur(o.montage)} geboekt op KKN ${o.kkn}`); } else log('CRM-KKN', '', `Montagekosten ${o.id} komen binnen zonder ordernummer`, false); }
   function rest(o) { if (state.koppeling && o.kkn) { o.exact.restBooked = true; if (o.restwerk) log('CRM-KKN', 'Boekhouding ' + o.adm, `Restwerk ${eur(o.restwerk)} geboekt op KKN ${o.kkn}; nacalculatie klaar`); } }
 
+  // Dezelfde order openen in een andere site (base = pad naar de demo-root)
+  const links = (o, base = '..', skip = '') => {
+    const L = [];
+    if (skip !== 'calc') L.push(`<a class="xlink" href="${base}/calculatie/index.html#/${o.id}" title="Open in de calculatie-app">Calculatie ↗</a>`);
+    if (skip !== 'boek') L.push(`<a class="xlink" href="${base}/boekhouding/index.html#/project/${o.id}" title="Project in de boekhouding van de vestiging">Boekhouding ↗</a>`);
+    if (skip !== 'boek' && o.exact.fabOrder) L.push(`<a class="xlink" href="${base}/boekhouding/index.html#/fo/${o.id}" title="Fabrieksorder in KK Nederland B.V.">Fabrieksorder ↗</a>`);
+    if (skip !== 'crm') L.push(`<a class="xlink" href="${base}/crm/index.html#/orders/${o.id}" title="Open de orderkaart in CRM-KKN">CRM ↗</a>`);
+    return L.join('');
+  };
   window.KKN = {
-    get state() { return state; }, on(f) { listeners.push(f); }, A, eur, eur2, find, incl, factoryCost, orderCost, calcCost,
+    get state() { return state; }, on(f) { listeners.push(f); }, A, links, eur, eur2, find, incl, factoryCost, orderCost, calcCost,
     ADM: { 0: 'KK Nederland B.V. (fabriek)', 2: 'Eindhoven', 4: 'Almere', 5: 'Nijmegen', 6: 'Arnhem', 9: 'Amersfoort', 10: 'Steenwijk', 11: 'Hillegom', 12: 'Vechtdal' },
   };
 })();
